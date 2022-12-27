@@ -3,12 +3,17 @@
 
 Coisas a Fazer:
 
----- corrigir bfs_distance (esta funcao serve para encontrar o caminho mais curto entre dois aeroportos, deve retornar um vetor com os indices dos nodes correspondentes aos aeroportos que fazem parte desse caimnho)
+---- corrigir voos (aparecer todos os que têm a mesma distância)
 
----- acrescentar restrição de airlines nas viagens entre aeroportos
+---- acrescentar restrição de airlines nas viagens entre aeroportos    HENRIQUE
 
----- implementar viagens entre cidades ou local ( depois de fazer entre aeroportos, implementa-se esta parte)
+---- implementar viagens entre cidades         BIA
+
+---- implementar viagens entre locais          RITA
 
 ---- implementar informacoes sobre os aeroportos (ja esta numero de voos que sai)
 
 ---- implementar extras
+
+
+!!!!!!!! unordered_set / unordered_map -----> temos de usar em algum momento
