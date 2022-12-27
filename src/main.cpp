@@ -1,3 +1,6 @@
+
+#include <iostream>
+
 #include <iostream>
 #include "Gestor.h"
 #include "Graph.h"
@@ -64,14 +67,15 @@ int main() {
             cout<<"\nOpcao invalida!";
             return 0;
         }
-        //print route
 
+        //print route
         cout<<"\n The fastest way to get to your destiny is:";
-        for(int i=0;i<route.size();i++){
+        for(int i=0;i<route.size()-1;i++){
             //cout<<route.size();
-            cout<<route[i].first<<","<<route[i].second<<"->"<<route[i+1].first<<","<<route[i+1].second;
+            cout << route[i].first << "," << route[i].second << " -> ";
             if(i+1==route.size()-1) break;
         }
+        cout << route.back().first << "," << route.back().second;
 
 
 
