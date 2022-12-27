@@ -36,13 +36,14 @@ public:
     // Add flight from source to destination with a certain airline
     void addFlight(int src, int dest, Airline airline);
 
-    // Depth-First Search
-    void dfs(int v);
+    //finds the shortest distance between a and b
+    int bfs_distance(int a, int b);
 
-    //Breadth-First Search
-    void bfs(int v);
+    //checks if it is possible to go from v to destino
+    bool dfs(int v, int destino, int distancia);
 
-    vector<int> bfs_distance(int a, int b);
+    //returns the rout between origem e destino
+    vector<int> getRoute(int origem, int destino, int distancia);
 
     //read flights
     void read_flights(vector<Airline> airlines);
@@ -60,7 +61,6 @@ public:
     vector<int> fly_local(string origem, string destino, int km,vector<string> companhias);
     //find less flights between airport
     vector<pair<string,string>> fly_airport(string origem, string destino, vector<string> companhias);
-
 
 };
 

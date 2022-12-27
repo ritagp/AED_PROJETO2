@@ -71,7 +71,6 @@ int main() {
         //print route
         cout<<"\n The fastest way to get to your destiny is:";
         for(int i=0;i<route.size()-1;i++){
-            //cout<<route.size();
             cout << route[i].first << "," << route[i].second << " -> ";
             if(i+1==route.size()-1) break;
         }
@@ -97,9 +96,6 @@ int main() {
         cout<<"Numero de voos que partem do areroporto: "<<number_of_flights;
         cout<<"";
     }
-
-
-
 
     return 0;
 }
