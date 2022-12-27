@@ -54,19 +54,22 @@ void Graph :: bfs( int v) {
     }
 }
 
-//////Nao esta bem!!!!!!!!!! ///// esta a dar um caminho, mas nao o mais curto ---- corrigir
+
 vector<int> Graph::bfs_distance(int a, int b) {
     vector<int> result;
     for (int i=1; i<=n; i++) {
         airports[i].visited = false;
         airports[i].dist = -1;
     }
+
+    bool found = false;
     queue<int> q;
     q.push(a);
     airports[a].visited = true;
     airports[a].dist = 0;
     result.push_back(a);
     while (!q.empty()) {
+        if(found) break;
         int u = q.front(); q.pop();
         for (auto e : airports[u].voos) {
             int w = e.destino;
@@ -74,8 +77,11 @@ vector<int> Graph::bfs_distance(int a, int b) {
                 q.push(w);
                 airports[w].visited = true;
                 airports[w].dist = airports[u].dist + 1;
-                result.push_back(w);
-                if (w == b) break;
+                if(airports[result.back()].dist < airports[w].dist) result.push_back(w);
+                if (w == b){found = true; break;}
+            }
+            else{
+                if(airports[w].dist > airports[u].dist + 1){ airports[w].dist = airports[u].dist + 1; }
             }
         }
     }
@@ -126,7 +132,7 @@ int Graph::find_airport(std::string code) {
 int Graph::number_flights(int a) {
     return airports[a].voos.size();
 }
- ///// FEITO-- DA MAL PQ BFS_DISTANCE TA MAL
+
 vector<pair<string,string>> Graph::fly_airport(std::string origem, std::string destino, vector<std::string> companhias) {
     vector<pair<string,string>> route;
     int o=0;
@@ -138,14 +144,16 @@ vector<pair<string,string>> Graph::fly_airport(std::string origem, std::string d
     vector<int> way= bfs_distance(o,d);
     for(int i=0;i<way.size();i++){
         route.push_back({airports[way[i]].airport.getCode(),airports[way[i]].airport.getName()});
-        break;
     }
-    return route;
 
+    return route;
 }
 
 vector<int> Graph::fly_city(std::string origem, std::string destino, vector<std::string> companhias) {
 
 }
 
-vector<int> Graph::fly_local(std::string origem, std::string destino, int km, vector<std::string> companhias) {}
+vector<int> Graph::fly_local(std::string origem, std::string destino, int km, vector<std::string> companhias) {
+
+
+}

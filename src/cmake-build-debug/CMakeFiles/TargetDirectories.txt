@@ -1,0 +1,3 @@
+C:/Users/HP/Desktop/FEUP/2ANO/AED/PROJETO2/AED_PROJETO2/src/cmake-build-debug/CMakeFiles/Projeto2.dir
+C:/Users/HP/Desktop/FEUP/2ANO/AED/PROJETO2/AED_PROJETO2/src/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/HP/Desktop/FEUP/2ANO/AED/PROJETO2/AED_PROJETO2/src/cmake-build-debug/CMakeFiles/rebuild_cache.dir
