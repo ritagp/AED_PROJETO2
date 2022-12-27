@@ -25,67 +25,61 @@ void Graph::addFlight(int src, int dest, Airline airline) {
     airports[src].voos.push_back({dest, airline});
 }
 
-// Depth-First Search: example implementation
-void Graph::dfs(int v) {
-    // show node order
-    // cout << v << " ";
-    airports[v].visited = true;
-    for (auto e : airports[v].voos) {
+//ckecks to see if it is possible to find destino, starting in v
+bool Graph :: dfs(int v, int destino, int distancia) {
+    if(distancia==0) return false;
+    airports[v]. visited = true;
+    for (auto e :  airports[v].voos) {
         int w = e.destino;
+        if(w==destino) return true;
         if (!airports[w].visited)
-            dfs(w);
+        dfs(w,destino,distancia--);
     }
+    return false;
 }
 
-void Graph :: bfs( int v) {
-    for ( int v=1; v<=n; v++) airports[v].visited = false ;
-    queue<int> q; // queue of unvisited nodes
-    q.push(v);
-    airports[v].visited = true ;
-    while (!q.empty ()) { // while there are still unprocessed nodes
-        int u = q.front (); q.pop (); // remove first element of q
-        for (auto e : airports[u].voos) {
-            int w = e.destino;
-            if (!airports[w].visited) { // new node!
-                q.push(w);
-                airports[w]. visited = true;
-            }
+vector<int> Graph::getRoute(int origem, int destino, int distancia){
+    vector<int> route;
+    route.push_back(origem);
+    auto it=airports[origem].voos.begin();
+    while (it!=airports[origem].voos.end()){
+        Flight e=*it;
+        int d=e.destino;
+        if(d==destino) {
+            route.push_back(d);
+            break;
         }
+        if(dfs(d,destino,distancia-1)){
+            route.push_back(d);
+            it=airports[d].voos.begin();
+            origem=d;
+            distancia=distancia-1;
+        }
+        else it++;
     }
+    return route;
 }
 
 
-vector<int> Graph::bfs_distance(int a, int b) {
-    vector<int> result;
+int Graph::bfs_distance(int a, int b) {
     for (int i=1; i<=n; i++) {
-        airports[i].visited = false;
-        airports[i].dist = -1;
+        airports[i].visited = false; airports[i].dist = -1;
     }
-
-    bool found = false;
     queue<int> q;
-    q.push(a);
-    airports[a].visited = true;
-    airports[a].dist = 0;
-    result.push_back(a);
+    q.push(a); airports[a].visited = true; airports[a].dist = 0;
     while (!q.empty()) {
-        if(found) break;
         int u = q.front(); q.pop();
         for (auto e : airports[u].voos) {
-            int w = e.destino;
+            int w = e.destino  ;
             if (!airports[w].visited) {
                 q.push(w);
                 airports[w].visited = true;
                 airports[w].dist = airports[u].dist + 1;
-                if(airports[result.back()].dist < airports[w].dist) result.push_back(w);
-                if (w == b){found = true; break;}
-            }
-            else{
-                if(airports[w].dist > airports[u].dist + 1){ airports[w].dist = airports[u].dist + 1; }
+                if (w == b) break;
             }
         }
     }
-    return result;
+    return airports[b].dist;
 }
 
 void Graph::read_flights(vector<Airline> airlines) {
@@ -141,11 +135,11 @@ vector<pair<string,string>> Graph::fly_airport(std::string origem, std::string d
         if(airports[i].airport.getCode()==origem) o=i;
         if(airports[i].airport.getCode()==destino) d=i;
     }
-    vector<int> way= bfs_distance(o,d);
-    for(int i=0;i<way.size();i++){
-        route.push_back({airports[way[i]].airport.getCode(),airports[way[i]].airport.getName()});
+    int dist= bfs_distance(o,d);
+    vector<int> route_= getRoute(o,d,dist);
+    for(int i=0;i<route_.size();i++){
+        route.push_back({airports[route_[i]].airport.getCode(),airports[route_[i]].airport.getName()});
     }
-
     return route;
 }
 
