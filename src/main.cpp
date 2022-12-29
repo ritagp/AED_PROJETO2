@@ -27,7 +27,7 @@ int main() {
 
 
     if(input=="1"){
-        vector<pair<string,string>> route;
+        vector<vector<string>> route;
         vector<string>companhias={};
         string tipo;
         string origem;
@@ -55,7 +55,7 @@ int main() {
         cout<<"\n DESTINO: ";
         cin >> destino;
         if(tipo=="1") graph.fly_city(origem, destino,companhias);
-        else if (tipo=="2") route=graph.fly_airport(origem, destino,companhias);
+        else if (tipo=="2") route = graph.fly_airport(origem, destino,companhias);
         else if (tipo=="3") {
             string x;
             cout<< "\n Indique o numero de km que pode variar das localizacoes inseridas: ";
@@ -69,12 +69,13 @@ int main() {
         }
 
         //print route
-        cout<<"\n The fastest way to get to your destiny is:";
-        for(int i=0;i<route.size()-1;i++){
-            cout << route[i].first << "," << route[i].second << " -> ";
-            if(i+1==route.size()-1) break;
+        cout<<"\nThe fastest way to get to your destiny is:\n";
+        for(auto vec : route){
+            for(int i =0; i<vec.size()-1;i++){
+                cout << vec[i] << " | ";
+            }
+            cout << vec.back()<< '\n';
         }
-        cout << route.back().first << "," << route.back().second;
 
 
 
