@@ -43,7 +43,7 @@ public:
     bool dfs(int v, int destino, int distancia);
 
     //returns the rout between origem e destino
-    void getRoute(int origem, int destino, int distancia, vector<int>& route);
+    vector<vector<int>> getRoute(int origem, int destino, int distancia);
 
     //read flights
     void read_flights(vector<Airline> airlines);
@@ -60,12 +60,12 @@ public:
     //find less flights between location<
     vector<int> fly_local(string origem, string destino, int km,vector<string> companhias);
     //find less flights between airport
-    vector<vector<string>> fly_airport(string origem, string destino, vector<string> companhias);
+    vector<vector<pair<string,string>>> fly_airport(string origem, string destino, vector<string> companhias);
 
-    vector<vector<int>> findRoutes(int origin, int destiny);
+    //vector<vector<int>> findRoutes(int origin, int destiny);
 
 
-    int minRoute(vector<vector<int>> routes);
+    //int minRoute(vector<vector<int>> routes);
 };
 
 
