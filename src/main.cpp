@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include <iostream>
+#include <set>
 #include "Gestor.h"
 #include "Graph.h"
 using namespace std;
@@ -27,7 +28,7 @@ int main() {
 
 
     if(input=="1"){
-        vector<vector<string>> route;
+        vector<vector<pair<string,string>>> route;
         vector<string>companhias={};
         string tipo;
         string origem;
@@ -43,7 +44,7 @@ int main() {
             cout<<"Indique o seu código.";
             for(int i=1;i<=stoi(numero);i++){
                 string a;
-                cout<<i<<")";
+                cout<<"\n"<<i<<")";
                 cin>> a;
                 companhias.push_back(a);
             }
@@ -69,13 +70,23 @@ int main() {
         }
 
         //print route
-        cout<<"\nThe fastest way to get to your destiny is:\n";
-        for(auto vec : route){
+        //cout<<"\nThe fastest way to get to your destiny is:\n";
+        /*for(auto vec : route){
             for(int i =0; i<vec.size()-1;i++){
                 cout << vec[i] << " | ";
             }
             cout << vec.back()<< '\n';
+        }*/
+        cout<<"\n The fastest way to get to your destiny is:";
+        for(int i=0;i<route.size();i++){
+            for(int j=0;j<route[i].size()-1;j++){
+                cout << route[i][j].first << "," << route[i][j].second << " -> ";
+                if(j+1==route.size()-1) break;
+            }
+            cout << route[i].back().first << "," << route[i].back().second;
+            if(i+1<route.size()) cout<< "\nAnother option:\n";
         }
+
 
 
 

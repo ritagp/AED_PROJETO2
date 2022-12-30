@@ -12,7 +12,7 @@ Airline::Airline(string code, string name, string callsign, string country) {
     this->code=code;
     this->callsign=callsign;
 }
-string Airline::getCode() {
+string Airline::getCode() const {
     return this->code;
 }
 string Airline::getCountry() {
@@ -23,4 +23,8 @@ string Airline::getName() {
 }
 string Airline::getCallSign() {
     return this->callsign;
+}
+bool Airline::operator==(Airline a2) {
+    if(this->getCode()==a2.getCode()) return true;
+    return false;
 }
