@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include <iostream>
+#include <set>
 #include "Gestor.h"
 #include "Graph.h"
 using namespace std;
@@ -43,7 +44,7 @@ int main() {
             cout<<"Indique o seu código.";
             for(int i=1;i<=stoi(numero);i++){
                 string a;
-                cout<<i<<")";
+                cout<<"\n"<<i<<")";
                 cin>> a;
                 companhias.push_back(a);
             }

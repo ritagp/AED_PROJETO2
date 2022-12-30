@@ -7,6 +7,7 @@
 
 #include <list>
 #include <vector>
+#include <unordered_set>
 #include "Airport.h"
 #include "Airline.h"
 
@@ -15,7 +16,7 @@ using namespace std;
 class Graph {
     struct Flight {
         int destino;   // Destination node
-        Airline airline; // An integer weight
+        list<Airline> airlines; // An integer weight
     };
 
     struct Node {  // Os nodes correspondem a aeroportos
@@ -30,30 +31,19 @@ class Graph {
     vector<Node> airports; // Lista de aeroportos
 
 public:
-    // Constructor: nr nodes and direction
-    Graph(vector<Airport> airports,int number_of_airports);
-
+     // Constructor: nr nodes and direction
+     Graph(vector<Airport> airports,int number_of_airports);
+     //read flights
+    void read_flights(vector<Airline> airlines);
     // Add flight from source to destination with a certain airline
     void addFlight(int src, int dest, Airline airline);
-
-    //finds the shortest distance between a and b
-    int bfs_distance(int a, int b);
-
-    //checks if it is possible to go from v to destino
-    bool dfs(int v, int destino, int distancia);
-
-    //returns the rout between origem e destino
-    vector<vector<int>> getRoute(int origem, int destino, int distancia);
-
-    //read flights
-    void read_flights(vector<Airline> airlines);
-
     //find airport
     int find_airport(string code);
-
     //how many flights leave from airport
     int number_flights(int a);
 
+    void getAllPathsUtil(int u, int d, int *path, int &path_index, vector<int> &route, vector<vector<int>> &result);
+    vector<vector<int>> getAllPaths(int s, int d);
 
     //find less flights between city
     vector<int> fly_city(string origem, string destino, vector<string> companhias);
@@ -62,10 +52,9 @@ public:
     //find less flights between airport
     vector<vector<pair<string,string>>> fly_airport(string origem, string destino, vector<string> companhias);
 
-    //vector<vector<int>> findRoutes(int origin, int destiny);
 
 
-    //int minRoute(vector<vector<int>> routes);
+
 };
 
 
