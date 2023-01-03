@@ -28,7 +28,7 @@ int main() {
 
 
     if(input=="1"){
-        vector<vector<pair<string,string>>> route;
+        vector<vector<string>> route;
         vector<string>companhias={};
         string tipo;
         string origem;
@@ -70,21 +70,12 @@ int main() {
         }
 
         //print route
-        //cout<<"\nThe fastest way to get to your destiny is:\n";
-        /*for(auto vec : route){
+        cout<<"\nThe fastest way to get to your destiny is:\n";
+        for(auto vec : route){
             for(int i =0; i<vec.size()-1;i++){
                 cout << vec[i] << " | ";
             }
             cout << vec.back()<< '\n';
-        }*/
-        cout<<"\n The fastest way to get to your destiny is:";
-        for(int i=0;i<route.size();i++){
-            for(int j=0;j<route[i].size()-1;j++){
-                cout << route[i][j].first << "," << route[i][j].second << " -> ";
-                if(j+1==route.size()-1) break;
-            }
-            cout << route[i].back().first << "," << route[i].back().second;
-            if(i+1<route.size()) cout<< "\nAnother option:\n";
         }
 
 
@@ -96,17 +87,14 @@ int main() {
         cout<<"\nIndique o codigo do Aeroporto sobre o qual quer recolher informacao\n";
         string aeroporto;
         cin>>aeroporto;
-        int number_of_flights=0;
         int a=graph.find_airport(aeroporto);
         if(a==0){
             cout<<"Aeroporto não encontrado";
         }
         else{
-            number_of_flights=graph.number_flights(a);
+            graph.getAirportInfo(a);
         }
-        cout<<"\n============== INFORMACOES GERAIS ==================\n";
-        cout<<"Numero de voos que partem do areroporto: "<<number_of_flights;
-        cout<<"";
+
     }
 
     return 0;

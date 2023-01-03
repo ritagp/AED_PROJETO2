@@ -15,7 +15,10 @@ public:
     string getName();
     string getCallSign();
     string getCountry();
-    bool operator== (Airline a2);
+    bool operator==(const Airline& f) const {
+         return (this->getCode() == f.code);
+    }
+
 private:
     string code;
     string name;
@@ -24,5 +27,10 @@ private:
 
 };
 
+struct AirlineHash{
+    size_t operator() (Airline const& airline) const{
+        return hash<string>() (airline.getCode());
+    }
+};
 
 #endif //PROJETO2_AIRLINE_H

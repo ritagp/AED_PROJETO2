@@ -8,16 +8,22 @@
 #include <list>
 #include <vector>
 #include <unordered_set>
+#include <set>
 #include "Airport.h"
 #include "Airline.h"
 
 using namespace std;
 
 class Graph {
+
+
+
     struct Flight {
         int destino;   // Destination node
-        list<Airline> airlines; // An integer weight
+        unordered_set<Airline, AirlineHash> airlines; // An integer weight
+
     };
+
 
     struct Node {  // Os nodes correspondem a aeroportos
         list<Flight> voos; // A list de voos que sai daquele aeroporto
@@ -50,10 +56,17 @@ public:
     //find less flights between location<
     vector<int> fly_local(string origem, string destino, int km,vector<string> companhias);
     //find less flights between airport
-    vector<vector<pair<string,string>>> fly_airport(string origem, string destino, vector<string> companhias);
+    vector<vector<string>> fly_airport(string origem, string destino, vector<string> companhias);
 
+    //For Airline restriction:
+    vector<vector<int>> specifAirlines(vector<vector<int>>& routes, vector<string> airlines);
+    int minRoute(vector<vector<int>> routes);
 
-
+    //Infos:
+    void getAirportInfo(int a);
+    int countDestinies(list<Flight> flights);
+    int countCountries(list<Flight> flights);
+    unordered_set<string> getAirlines(list<Flight> flights);
 
 };
 
