@@ -5,6 +5,7 @@
 #include "Gestor.h"
 #include "Airport.h"
 #include "Airline.h"
+#include "Graph.h"
 #include <sstream>
 #include <fstream>
 #include <iostream>
@@ -13,11 +14,10 @@
 using namespace std;
 
 Gestor::Gestor() {
-    airports={};
     airlines={};
 }
 
-void Gestor::read_airports() {
+void Gestor::read_airports(Graph& graph) {
     ifstream in_airplanes("airports.csv");
     //remove the first line
     string fst_line;
@@ -32,7 +32,7 @@ void Gestor::read_airports() {
             data.push_back(info);
         }
         Airport airport = *new Airport(data[0], data[1], data[2], data[3], data[4], data[5]);
-        airports.push_back(airport);
+        graph.setAirport(airport);
         data.clear();
     }
 }
@@ -52,15 +52,11 @@ void Gestor::read_airlines() {
             data.push_back(info);
         }
         Airline airline = *new Airline(data[0], data[1], data[2], data[3]);
-        airlines.push_back(airline);
+        airlines.insert(airline);
         data.clear();
     }
 }
 
-vector<Airport> Gestor::getAirports() {
-    return this->airports;
-}
-
-vector<Airline> Gestor::getAirlines() {
+unordered_set<Airline, AirlineHash> Gestor::getAirlines() {
     return this->airlines;
 }

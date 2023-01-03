@@ -16,8 +16,6 @@ using namespace std;
 
 class Graph {
 
-
-
     struct Flight {
         int destino;   // Destination node
         unordered_set<Airline, AirlineHash> airlines; // An integer weight
@@ -38,9 +36,10 @@ class Graph {
 
 public:
      // Constructor: nr nodes and direction
-     Graph(vector<Airport> airports,int number_of_airports);
+     Graph();
+     void setAirport(Airport a);
      //read flights
-    void read_flights(vector<Airline> airlines);
+    void read_flights(unordered_set<Airline,AirlineHash> airlines);
     // Add flight from source to destination with a certain airline
     void addFlight(int src, int dest, Airline airline);
     //find airport
