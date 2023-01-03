@@ -6,17 +6,23 @@
 #define PROJETO2_AIRLINE_H
 
 #include <string>
+#include <unordered_map>
+
 using namespace std;
 
 class Airline {
 public:
     Airline(string code, string name, string callsign, string country);
+
     string getCode() const;
     string getName();
     string getCallSign();
     string getCountry();
     bool operator==(const Airline& f) const {
          return (this->getCode() == f.code);
+    }
+    bool operator<(const Airline& f) const {
+        return (this->getCode() < f.code);
     }
 
 private:

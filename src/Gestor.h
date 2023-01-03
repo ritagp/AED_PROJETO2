@@ -9,18 +9,17 @@
 #include <vector>
 #include "Airport.h"
 #include "Airline.h"
+#include "Graph.h"
 
 class Gestor {
     public:
         Gestor();
         void read_airlines();
-        void read_airports();
-        vector<Airport> getAirports();
-        vector<Airline> getAirlines();
+        void read_airports(Graph& graph);
+        unordered_set<Airline, AirlineHash> getAirlines();
 
     private:
-        vector<Airport> airports;
-        vector<Airline> airlines;
+        unordered_set<Airline, AirlineHash>  airlines;
 };
 
 

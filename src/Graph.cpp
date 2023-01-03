@@ -11,19 +11,13 @@
 #include "Graph.h"
 
 ///Construção do grafo
-
-Graph::Graph(vector<Airport> airports,int number_of_airports) {
+Graph::Graph() {
     struct Node zero= {{},Airport("","","","","",""),false,-1};
     this->airports.push_back(zero);
-    this->n=number_of_airports;
-    for(int i=0;i<number_of_airports;i++){
-        struct Node n={{},airports[i],false,-1};
-        this->airports.push_back(n);
-    }
 }
 
 ///Adição dos voos ao grafo
-void Graph::read_flights(vector<Airline> airlines) {
+void Graph::read_flights(unordered_set<Airline,AirlineHash> airlines_) {
     ifstream in_flights("flights.csv");
     //remove the first line
     string fst_line;
@@ -45,20 +39,20 @@ void Graph::read_flights(vector<Airline> airlines) {
             if(airports[i].airport.getCode()==data[1])
                 dest=i;
         }
-        Airline a= Airline("","","","");
-        for(int i=0;i<airlines.size();i++){
-            if(airlines[i].getCode()==data[2]) a=airlines[i];
-        }
-        addFlight(src,dest,a);
+        Airline find_=Airline(data[2],"","","");
+        auto a= std::find(airlines_.begin(), airlines_.end(),find_);
+        Airline airline=*a;
+        addFlight(src,dest,airline);
         data.clear();
     }
 }
 
 
 
-//Add a flight from source to destination with a certain airline
+///Add a flight from source to destination with a certain airline
 void Graph::addFlight(int src, int dest, Airline airline) {
-    if (src<1 || src>n || dest<1 || dest>n) return;
+    n=airports.size();
+    if(src<1 || src>n || dest<1 || dest>n) return;
     auto it=airports[src].voos.begin();
     while(it!=airports[src].voos.end()){
         Flight& temp=*it;
@@ -72,7 +66,7 @@ void Graph::addFlight(int src, int dest, Airline airline) {
     airports[src].voos.push_back({dest,temp});
 }
 
-//find the indice of an airport given a code
+///find the indice of an airport given a code
 int Graph::find_airport(std::string code) {
     for( Node n:airports){
         n.visited=false;
@@ -83,13 +77,14 @@ int Graph::find_airport(std::string code) {
     return 0;
 }
 
-//find the number of flights that leave from a airport
+///find the number of flights that leave from a airport
 int Graph::number_flights(int a) {
     return airports[a].voos.size();
 }
 
-
+///get all paths petween s and d
 vector<vector<int>> Graph::getAllPaths(int s, int d){
+    this->n=airports.size();
     int* path = new int[n];
     int path_index = 0;
     vector<int> route;
@@ -214,9 +209,6 @@ vector<vector<string>> Graph::fly_airport(std::string origem, std::string destin
         }
     }
 
-
-
-
     return res;
 }
 
@@ -228,8 +220,10 @@ vector<int> Graph::fly_city(std::string origem, std::string destino, vector<std:
 
 vector<int> Graph::fly_local(std::string origem, std::string destino, int km, vector<std::string> companhias) {
 
-}
 
+
+
+}
 
 
 unordered_set<string> Graph::getAirlines(list<Flight> flights){
@@ -281,6 +275,12 @@ void Graph::getAirportInfo(int a) {
     for (auto elem: getAirlines(airports[a].voos)) {
         cout << "  > " << elem << '\n';
     }
+}
+
+void Graph::setAirport(Airport a) {
+    struct Node n={{},a,false,-1};
+    this->airports.push_back(n);
+
 }
 
 
