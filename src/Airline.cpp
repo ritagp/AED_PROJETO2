@@ -24,7 +24,5 @@ string Airline::getName() {
 string Airline::getCallSign() {
     return this->callsign;
 }
-bool Airline::operator==(Airline a2) {
-    if(this->getCode()==a2.getCode()) return true;
-    return false;
-}
+
+

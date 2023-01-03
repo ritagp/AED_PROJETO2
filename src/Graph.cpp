@@ -7,6 +7,7 @@
 #include <sstream>
 #include <queue>
 #include <stack>
+#include <algorithm>
 #include "Graph.h"
 
 ///Construção do grafo
@@ -62,12 +63,12 @@ void Graph::addFlight(int src, int dest, Airline airline) {
     while(it!=airports[src].voos.end()){
         Flight& temp=*it;
         if(temp.destino==dest) {
-            temp.airlines.push_back(airline);
+            temp.airlines.insert(airline);
             return;
         }
         it++;
     }
-    list<Airline> temp={airline};
+    unordered_set<Airline, AirlineHash> temp={airline};
     airports[src].voos.push_back({dest,temp});
 }
 
@@ -127,29 +128,96 @@ void Graph::getAllPathsUtil(int u, int d,int path[], int& path_index,vector<int>
                 if (!airports[d_].visited)
                     getAllPathsUtil(d_, d, path, path_index, route, result);
             }
-
-
         }
     }
     path_index--;
     airports[u].visited = false;
 
 }
+vector<vector<int>> Graph::specifAirlines(vector<vector<int>>& routes, vector<string> airlines){
+    vector<vector<int>> tr;
+    bool flag = true;
 
-vector<vector<pair<string,string>>> Graph::fly_airport(std::string origem, std::string destino, vector<std::string> companhias) {
+    for(auto route : routes){ //para cada rota
+        int i = 0;
+        while(flag && i<route.size()-1){
+            flag = false;
+            int from = route[i];
+            int to = route[i+1];
+            for(auto f : airports[from].voos){ //nos voos da origem, verifica se existe algum que chegue ao destino
+                if(f.destino == to){
+                    for(string a : airlines){ //para cada companhia especificada, ve se tem pelo menos uma opção
+                        Airline temp = Airline(a,"","","");
+                        if(f.airlines.find(temp) != f.airlines.end()){ //basta ter uma
+                            flag = true;
+                            break;
+                        }
+
+                    }
+                }
+                if(flag) break;
+            }
+            i++;
+        }
+        if(flag){ tr.push_back(route); }
+    }
+
+    return tr;
+}
+
+bool sortHelper(vector<int> a, vector<int> b){
+    return a.size() < b.size();
+}
+
+int Graph::minRoute(vector<vector<int>> routes){
+    int min = 100;
+
+    for(auto elem : routes){
+        if(elem.size() < min){ min = elem.size();}
+    }
+
+    return min;
+}
+
+vector<vector<string>> Graph::fly_airport(std::string origem, std::string destino, vector<std::string> companhias) {
+    vector<vector<string>> res;
     int o= find_airport(origem);
     int d= find_airport(destino);
-    vector<vector<int>> result= getAllPaths(o, d);
+    vector<vector<int>> result = getAllPaths(o, d);
     vector<pair<string,string>> result_;
     vector<vector<pair<string,string>>> route;
-    for(int i=0;i<result.size();i++){
-        for(int j=0;j<result[i].size();j++){
-            result_.push_back({airports[result[i][j]].airport.getCode(),airports[result[i][j]].airport.getName()});
+
+    sort(result.begin(),result.end(), sortHelper);
+    if(companhias.size() != 0){
+        vector<vector<int>> final = specifAirlines(result, companhias);
+        int min_route = minRoute(final);
+        for(auto vec : final){
+            if(vec.size() != min_route) continue; //Comentar para voltar a mostrar todas as viajens
+            vector<string> route;
+            for(auto elem : vec){
+                string temp = airports[elem].airport.getCode() + " " + airports[elem].airport.getName();
+                route.push_back(temp);
+            }
+            res.push_back(route);
         }
-        route.push_back(result_);
-        result_={};
     }
-    return route;
+    else{
+        int min_route = minRoute(result);
+        for(auto vec : result){
+            if(vec.size() != min_route) continue; //Comentar para voltar a mostrar todas as viajens
+            vector<string> route;
+            for(auto elem : vec){
+                string temp = airports[elem].airport.getCode() + " " + airports[elem].airport.getName();
+                route.push_back(temp);
+            }
+            res.push_back(route);
+        }
+    }
+
+
+
+
+    return res;
 }
 
 
@@ -161,3 +229,58 @@ vector<int> Graph::fly_city(std::string origem, std::string destino, vector<std:
 vector<int> Graph::fly_local(std::string origem, std::string destino, int km, vector<std::string> companhias) {
 
 }
+
+
+
+unordered_set<string> Graph::getAirlines(list<Flight> flights){
+    unordered_set<string> temp;
+
+    for(auto elem : flights){
+        for(auto f : elem.airlines){
+            if(temp.find(f.getName()) == temp.end()){
+                temp.insert(f.getCode()+ " - " + f.getName());
+            }
+        }
+    }
+    return temp;
+}
+
+int Graph::countDestinies(list<Flight> flights){
+    unordered_set<string> temp;
+
+    for(auto elem : flights){
+        if(temp.find(airports[elem.destino].airport.getCity()) == temp.end()){
+            temp.insert(airports[elem.destino].airport.getCity() + " - " + airports[elem.destino].airport.getCountry());
+        }
+    }
+    return temp.size();
+}
+
+int Graph::countCountries(list<Flight> flights){
+    unordered_set<string> temp;
+
+    for(auto elem : flights){
+        if(temp.find(airports[elem.destino].airport.getCountry()) == temp.end()){
+            temp.insert(airports[elem.destino].airport.getCountry());
+        }
+    }
+    return temp.size();
+}
+
+void Graph::getAirportInfo(int a) {
+
+    cout << "\n============== INFORMACOES GERAIS ==================\n";
+    cout << "Aeroporto: " << airports[a].airport.getCode() << " - " << airports[a].airport.getName() << '\n';
+    cout << "Localizacao: " << airports[a].airport.getCity() << " - " << airports[a].airport.getCountry() << " | "
+         << airports[a].airport.getLatitude() << ", " << airports[a].airport.getLongitude() << '\n';
+    cout << "Quantidade de voos de partida: " << airports[a].voos.size() << '\n';
+    cout << "Quantidade de destinos: " << countDestinies(airports[a].voos) << '\n';
+    cout << "Quantidade de paises: " << countCountries(airports[a].voos) << '\n';
+    cout << "Companhias aereas operantes: " << '\n';
+
+    for (auto elem: getAirlines(airports[a].voos)) {
+        cout << "  > " << elem << '\n';
+    }
+}
+
+
