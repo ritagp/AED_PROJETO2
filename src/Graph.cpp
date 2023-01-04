@@ -9,6 +9,7 @@
 #include <stack>
 #include <algorithm>
 #include "Graph.h"
+#include <map>
 
 ///Construção do grafo
 Graph::Graph() {
@@ -174,7 +175,7 @@ int Graph::minRoute(vector<vector<int>> routes){
     return min;
 }
 
-vector<vector<string>> Graph::fly_airport(std::string origem, std::string destino, vector<std::string> companhias) {
+vector<vector<string>> Graph::fly_airport(std::string origem, std::string destino, vector<std::string> &companhias) {
     vector<vector<string>> res;
     int o= find_airport(origem);
     int d= find_airport(destino);
@@ -212,18 +213,144 @@ vector<vector<string>> Graph::fly_airport(std::string origem, std::string destin
     return res;
 }
 
-
-vector<int> Graph::fly_city(std::string origem, std::string destino, vector<std::string> companhias) {
-
+int Graph::bfs_distance(int a, int b) {
+    for (int i=1; i<=n; i++) {
+        airports[i].visited = false; airports[i].dist = -1;
+    }
+    queue<int> q;
+    q.push(a); airports[a].visited = true; airports[a].dist = 0;
+    while (!q.empty()) {
+        int u = q.front(); q.pop();
+        for (auto e : airports[u].voos) {
+            int w = e.destino  ;
+            if (!airports[w].visited) {
+                q.push(w);
+                airports[w].visited = true;
+                airports[w].dist = airports[u].dist + 1;
+                if (w == b) break;
+            }
+        }
+    }
+    return airports[b].dist;
+}
+vector<vector<vector<string>>>Graph::fly_city(std::string origem, std::string destino, vector<std::string> companhias) {
+    vector<int> ori;
+    vector<int> dest;
+    int orig;
+    int desti;
+    for (int i = 1; i < airports.size(); i++){
+        if (airports[i].airport.getCity() == origem){
+            orig = i;
+            ori.push_back(orig);
+        }
+        if (airports[i].airport.getCity() == destino){
+            desti = i;
+            dest.push_back(desti);
+        }
+    }
+    map<vector<string>,int> comb;
+    vector<string> air;
+    for (int i = 0; i < ori.size(); i++){
+        for (int j = 0; j < dest.size(); j++){
+            air.clear();
+            int dist = bfs_distance(ori[i],ori[j]);
+            air.push_back(airports[ori[i]].airport.getCode());
+            air.push_back(airports[dest[i]].airport.getCode());
+            comb[air] = dist;
+        }
+    }
+    auto it = comb.begin();
+    auto min = comb.begin();
+    vector<vector<string>> possible;
+    while (it != comb.end()){
+        if ((*it).second < min->second) {
+            min = it;
+            air = min->first;
+        }
+        it++;
+    }
+    auto it1 = comb.begin();
+    while (it1 != comb.end()){
+        if ((*it1).second == min->second){
+            air = (*it1).first;
+            possible.push_back(air);
+        }
+        it1++;
+    }
+    vector<vector<vector<string>>> ress;
+    if (possible.size() > 1){
+        vector<vector<string>> temp;
+        for (int i = 0; i < possible.size(); i++){
+            temp = fly_airport(possible[i][0], possible[i][1], companhias);
+            ress.push_back(temp);
+        }
+    }
+    else{
+        ress.push_back(fly_airport(possible[0][0], possible[0][1], companhias));
+    }
+    return ress;
 }
 
 
-vector<int> Graph::fly_local(std::string origem, std::string destino, int km, vector<std::string> companhias) {
-
-
-
-
+vector<vector<vector<string>>> Graph::fly_local(string lat_ori, string long_ori, string lat_dest, string long_dest, int km, vector<std::string> companhias) {
+    vector<int> ori;
+    vector<int> dest;
+    int orig;
+    int desti;
+    for (int i = 1; i < airports.size(); i++){
+        if (getDistanceKms(stod(lat_ori), stod(long_ori),stod(airports[i].airport.getLatitude()), stod(airports[i].airport.getLongitude())) <= km) {
+            orig = i;
+            ori.push_back(orig);
+        }
+        if (getDistanceKms(stod(lat_dest), stod(long_dest),stod(airports[i].airport.getLatitude()), stod(airports[i].airport.getLongitude())) <= km){
+            desti = i;
+            dest.push_back(desti);
+        }
+    }
+    map<vector<string>,int> comb;
+    vector<string> air;
+    for (int i = 0; i < ori.size(); i++){
+        for (int j = 0; j < dest.size(); j++){
+            air.clear();
+            int dist = bfs_distance(ori[i],ori[j]);
+            air.push_back(airports[ori[i]].airport.getCode());
+            air.push_back(airports[dest[j]].airport.getCode());
+            comb[air] = dist;
+        }
+    }
+    auto it = comb.begin();
+    auto min = comb.begin();
+    vector<vector<string>> possible;
+    while (it != comb.end()){
+        if ((*it).second < min->second) {
+            min = it;
+            air = min->first;
+        }
+        it++;
+    }
+    auto it1 = comb.begin();
+    while (it1 != comb.end()){
+        if ((*it1).second == min->second){
+            air = (*it1).first;
+            possible.push_back(air);
+        }
+        it1++;
+    }
+    vector<vector<vector<string>>> ress;
+    if (possible.size() > 1){
+        vector<vector<string>> temp;
+        for (int i = 0; i < possible.size(); i++){
+            temp = fly_airport(possible[i][0], possible[i][1], companhias);
+            ress.push_back(temp);
+        }
+    }
+    else{
+        ress.push_back(fly_airport(possible[0][0], possible[0][1], companhias));
+    }
+    return ress;
 }
+
+
 
 
 unordered_set<string> Graph::getAirlines(list<Flight> flights){
@@ -280,7 +407,20 @@ void Graph::getAirportInfo(int a) {
 void Graph::setAirport(Airport a) {
     struct Node n={{},a,false,-1};
     this->airports.push_back(n);
+}
 
+double Graph::getDistanceKms(double lat1, double long1, double lat2, double long2){
+    int earth_radius = 6371;
+    double diff_lat = degToRad(lat2-lat1);
+    double diff_long = degToRad(long2-long1);
+    double res = sin(diff_lat/2) * sin(diff_lat/2) + cos(degToRad(lat1)) * cos(degToRad(lat2))* sin(diff_long/2) * sin(diff_long/2);
+    double c = 2 * atan2(sqrt(res), sqrt(1-res));
+    double final = earth_radius * c;
+    return final;
+}
+
+double Graph::degToRad(double diff){
+    return diff * (M_PI/180);
 }
 
 
