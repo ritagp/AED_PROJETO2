@@ -51,15 +51,18 @@ public:
     vector<vector<int>> getAllPaths(int s, int d);
 
     //find less flights between city
-    vector<int> fly_city(string origem, string destino, vector<string> companhias);
+    vector<vector<vector<string>>>fly_city(std::string origem, std::string destino, vector<std::string> companhias);
     //find less flights between location<
-    vector<int> fly_local(string origem, string destino, int km,vector<string> companhias);
+    vector<vector<vector<string>>>fly_local(string lat_ori, string long_ori, string lat_dest, string long_dest, int km, vector<std::string> companhias);
     //find less flights between airport
-    vector<vector<string>> fly_airport(string origem, string destino, vector<string> companhias);
+    vector<vector<string>> fly_airport(string origem, string destino, vector<string> &companhias);
 
     //For Airline restriction:
     vector<vector<int>> specifAirlines(vector<vector<int>>& routes, vector<string> airlines);
     int minRoute(vector<vector<int>> routes);
+    int bfs_distance(int a, int b);
+    double degToRad(double diff);
+    double getDistanceKms(double lat1, double long1, double lat2, double long2);
 
     //Infos:
     void getAirportInfo(int a);
