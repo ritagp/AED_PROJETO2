@@ -64,9 +64,15 @@ int main() {
             cin >> tipo;
             if (tipo == "1") {
                 cout << "\n ORIGEM: ";
-                cin >> origem;
+                string origem1;
+                cin>>origem1;
+                getline(cin,origem,'\n');
+                origem=origem1+origem;
                 cout << "\n DESTINO: ";
-                cin >> destino;
+                string destino1;
+                cin>>destino1;
+                getline(cin,destino,'\n');
+                destino=destino1+destino;
                 route_big = graph.fly_city(origem, destino, companhias,one);
             }
             else if (tipo == "2") {
