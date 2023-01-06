@@ -396,5 +396,3 @@ double Graph::getDistanceKms(double lat1, double long1, double lat2, double long
 double Graph::degToRad(double diff){
     return diff * (M_PI/180);
 }
-
-
