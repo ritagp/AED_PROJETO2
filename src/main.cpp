@@ -52,6 +52,14 @@ int main() {
                     companhias.push_back(a);
                 }
             }
+            cout<<"\n Pretende que seja apresentada uma unica possibilidade de percurso, ou todas  que consistem no menor número de voos?\n";
+            cout<<"\n 1) Uma";
+            cout<<"\n 2) Todas\n";
+            string a;
+            cin>> a;
+            bool one;
+            if(a=="1") one=true;
+            if(a=="2") one=false;
             cout << "\n Vai inserir o que?: \n  1) Cidade 2) Codigo de Aeroporto 3) Localizacao ";
             cin >> tipo;
             if (tipo == "1") {
@@ -59,14 +67,14 @@ int main() {
                 cin >> origem;
                 cout << "\n DESTINO: ";
                 cin >> destino;
-                route_big = graph.fly_city(origem, destino, companhias);
+                route_big = graph.fly_city(origem, destino, companhias,one);
             }
             else if (tipo == "2") {
                 cout << "\n ORIGEM: ";
                 cin >> origem;
                 cout << "\n DESTINO: ";
                 cin >> destino;
-                route = graph.fly_airport(origem, destino, companhias);
+                route = graph.fly_airport(origem, destino, companhias, one);
             }
             else if (tipo == "3") {
                 string lat_orig;
@@ -86,16 +94,15 @@ int main() {
                 cout << "\n Indique o numero de km que pode variar das localizacoes inseridas: ";
                 cin >> x;
                 int km = stoi(x);
-                route_big = graph.fly_local(lat_orig,long_orig,lat_dest,long_dest,km ,companhias);
+                route_big = graph.fly_local(lat_orig,long_orig,lat_dest,long_dest,km ,companhias,one);
             } else {
                 cout << "\nOpcao invalida!";
                 return 0;
             }
 
             //print route
-            if (route.empty() && route_big.empty()) cout << "\n Impossivel";
-            else if (!route.empty() && route_big.empty()) {
-                cout << "\nAs melhores opçoes são:\n";
+            if (!route.empty() && route_big.empty()) {
+                cout << "\nAs opcoes sao:\n";
                 for (auto vec: route) {
                     for (int i = 0; i < vec.size() - 1; i++) {
                         cout << vec[i] << " | ";
@@ -105,7 +112,7 @@ int main() {
             }
 
             else if (!route_big.empty() && route.empty()) {
-                cout << "\nAs melhores opçoes são:\n";
+                cout << "\nAs opcoes sao:\n";
                 for (auto vec: route_big){
                     for (auto vec1: vec) {
                         for (int i = 0; i < vec1.size() - 1; i++) {
@@ -123,7 +130,7 @@ int main() {
             cin >> aeroporto;
             int a = graph.find_airport(aeroporto);
             if (a == 0) {
-                cout << "Aeroporto não encontrado";
+                cout << "Aeroporto nao encontrado";
             } else {
                 graph.getAirportInfo(a);
             }
