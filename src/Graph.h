@@ -9,6 +9,7 @@
 #include <vector>
 #include <unordered_set>
 #include <set>
+#include <stack>
 #include "Airport.h"
 #include "Airline.h"
 
@@ -47,19 +48,17 @@ public:
     //how many flights leave from airport
     int number_flights(int a);
 
-    void getAllPathsUtil(int u, int d, int *path, int &path_index, vector<int> &route, vector<vector<int>> &result);
-    vector<vector<int>> getAllPaths(int s, int d);
+    void getAllPathsUtil(int u, int d, int *path, int &path_index,int min, vector<int> &route, vector<vector<int>> &result, vector<string> companhias, bool one);
+    vector<vector<int>> getAllPaths(int s, int d, int min, vector<string> companhias, bool one);
 
     //find less flights between city
-    vector<vector<vector<string>>>fly_city(std::string origem, std::string destino, vector<std::string> companhias);
+    vector<vector<vector<string>>>fly_city(std::string origem, std::string destino, vector<std::string> companhias, bool one);
     //find less flights between location<
-    vector<vector<vector<string>>>fly_local(string lat_ori, string long_ori, string lat_dest, string long_dest, int km, vector<std::string> companhias);
+    vector<vector<vector<string>>>fly_local(string lat_ori, string long_ori, string lat_dest, string long_dest, int km, vector<std::string> companhias, bool one);
     //find less flights between airport
-    vector<vector<string>> fly_airport(string origem, string destino, vector<string> &companhias);
+    vector<vector<string>> fly_airport(string origem, string destino, vector<string> &companhias, bool one);
 
-    //For Airline restriction:
-    vector<vector<int>> specifAirlines(vector<vector<int>>& routes, vector<string> airlines);
-    int minRoute(vector<vector<int>> routes);
+
     int bfs_distance(int a, int b);
     double degToRad(double diff);
     double getDistanceKms(double lat1, double long1, double lat2, double long2);
