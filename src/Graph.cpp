@@ -12,13 +12,13 @@
 #include <map>
 #include <valarray>
 
-///Construção do grafo
+//Construção do grafo
 Graph::Graph() {
     struct Node zero= {{},Airport("","","","","",""),false,-1};
     this->airports.push_back(zero);
 }
 
-///Adição dos voos ao grafo
+//Adição dos voos ao grafo
 void Graph::read_flights(unordered_set<Airline,AirlineHash> airlines_) {
     ifstream in_flights("flights.csv");
     //remove the first line
@@ -167,6 +167,7 @@ vector<vector<string>> Graph::fly_airport(std::string origem, std::string destin
         for(int i=1;i<airports.size();i++){
             airports[i].visited=false;
         }
+        vector<vector<vector<int>>> resu;
         result =getAllPaths(o,d,i,companhias, one);
         if(!result.empty()) break;
         i++;
@@ -207,7 +208,7 @@ int Graph::bfs_distance(int a, int b){
     }
     return airports[b].dist;
 }
-vector<vector<vector<string>>>Graph::fly_city(std::string origem, std::string destino, vector<std::string> companhias, bool one) {
+vector<vector<vector<string>>> Graph::fly_city(std::string origem, std::string destino, vector<std::string> companhias, bool one) {
     vector<int> ori;
     vector<int> dest;
     int orig;
@@ -292,6 +293,7 @@ vector<vector<vector<string>>> Graph::fly_local(string lat_ori, string long_ori,
             comb[air] = dist;
         }
     }
+
     auto it = comb.begin();
     auto min = comb.begin();
     vector<vector<string>> possible;
@@ -310,6 +312,7 @@ vector<vector<vector<string>>> Graph::fly_local(string lat_ori, string long_ori,
         }
         it1++;
     }
+
     vector<vector<vector<string>>> ress;
     if (possible.size() > 1){
         vector<vector<string>> temp;
@@ -321,7 +324,9 @@ vector<vector<vector<string>>> Graph::fly_local(string lat_ori, string long_ori,
     else{
         ress.push_back(fly_airport(possible[0][0], possible[0][1], companhias,one));
     }
+
     return ress;
+
 }
 
 
