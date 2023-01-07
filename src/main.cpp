@@ -107,6 +107,8 @@ int main() {
             }
 
             //print route
+            if (route_big.empty() && route.empty())
+                cout << "\n Input invalido";
             if (!route.empty() && route_big.empty()) {
                 cout << "\nAs opcoes sao:\n";
                 for (auto vec: route) {
