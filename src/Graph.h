@@ -44,6 +44,7 @@ public:
      /// Reads flights.
      /// \param airlines The airlines
     void read_flights(unordered_set<Airline,AirlineHash> airlines);
+    bool find_city(string city);
     /// Add a flight from a certain source to a certain destination performed by a certain airline.
     /// \param src Source
     /// \param dest Destination
@@ -68,7 +69,7 @@ public:
     /// \param result
     /// \param companhias Airlines permitted by the user
     /// \param one Wether it wants all the fastest alternatives or just one
-    void getAllPathsUtil(int u, int d, int *path, int &path_index,int min, vector<int> &route, vector<vector<int>> &result, vector<string> companhias, bool one);
+    void getAllPathsUtil(int u, int d, int *path, int &path_index,int min, vector<int> &route, vector<vector<int>> &result, vector<string> &companhias, bool one);
     ///
     /// \param s Source
     /// \param d Destination
@@ -76,7 +77,7 @@ public:
     /// \param companhias Airlines permitted by the user
     /// \param one
     /// \return Wether it wants all the fastest alternatives or just one
-    vector<vector<int>> getAllPaths(int s, int d, int min, vector<string> companhias, bool one);
+    vector<vector<int>> getAllPaths(int s, int d, int min, vector<string> &companhias, bool one);
 
     /// Finds the fastest option to travel through cities
     /// \param origem Source
