@@ -21,7 +21,7 @@ public:
     Airport(string code, string name, string city, string country, string latitude, string longitude);
     /// Getter.
     /// \return Code of the airport
-    string getCode();
+    string getCode() const;
     /// Getter.
     /// \return Name of the airport
     string getName();
@@ -47,6 +47,7 @@ private:
     string longitude;
 
 };
+
 
 
 #endif //PROJETO2_AIRPORT_H

@@ -15,7 +15,7 @@ Airport::Airport(string code,string name,string city,string country,string latit
     this->name=name;
 }
 
-string Airport::getCode() {
+string Airport::getCode() const {
     return this->code;
 }
 string Airport::getName() {

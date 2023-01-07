@@ -41,6 +41,7 @@ public:
      /// Setter.
      /// \param a An airport
      void setAirport(Airport a);
+
      /// Reads flights.
      /// \param airlines The airlines
     void read_flights(unordered_set<Airline,AirlineHash> airlines);
@@ -85,7 +86,7 @@ public:
     /// \param companhias Airlines permitted by the user
     /// \param one Wether it wants all the fastest alternatives or just one
     /// \return The fastest option
-    vector<vector<vector<string>>> fly_city(std::string origem, std::string destino, vector<std::string> companhias, bool one);
+    vector<vector<vector<string>>> fly_city(std::string origem, std::string destino, vector<std::string> companhias, bool one,vector<vector<vector<string>>>& airlines);
     //find less flights between location<
     /// Finds the fastest option to travel between locations
     /// \param lat_ori Latitude of the source
@@ -96,7 +97,7 @@ public:
     /// \param companhias Airlines permitted by the user
     /// \param one Wether it wants all the fastest alternatives or just one
     /// \return The fastest option
-    vector<vector<vector<string>>>fly_local(string lat_ori, string long_ori, string lat_dest, string long_dest, int km, vector<std::string> companhias, bool one);
+    vector<vector<vector<string>>>fly_local(string lat_ori, string long_ori, string lat_dest, string long_dest, int km, vector<std::string> companhias, bool one,vector<vector<vector<string>>>& airlines);
     //find less flights between airport
     /// Finds the fastest option between airports given by the user.
     /// \param origem Source
@@ -104,7 +105,7 @@ public:
     /// \param companhias Airlines permitted by the user
     /// \param one Wether it wants all the fastest alternatives or just one
     /// \return The fastest option
-    vector<vector<string>> fly_airport(string origem, string destino, vector<string> &companhias, bool one);
+    vector<vector<string>> fly_airport(string origem, string destino, vector<string> &companhias, bool one, vector<vector<vector<string>>>& airlines);
     /// Calculates the distance between two points.
     /// \param a Airport a
     /// \param b Airport b
