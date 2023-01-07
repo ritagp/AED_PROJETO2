@@ -167,7 +167,6 @@ vector<vector<string>> Graph::fly_airport(std::string origem, std::string destin
         for(int i=1;i<airports.size();i++){
             airports[i].visited=false;
         }
-        vector<vector<vector<int>>> resu;
         result =getAllPaths(o,d,i,companhias, one);
         if(!result.empty()) break;
         i++;
@@ -228,29 +227,18 @@ vector<vector<vector<string>>> Graph::fly_city(std::string origem, std::string d
     for (int i = 0; i < ori.size(); i++){
         for (int j = 0; j < dest.size(); j++){
             air.clear();
-            int dist = bfs_distance(ori[i],ori[j]);
+            int dist = bfs_distance(ori[i],dest[j]);
             air.push_back(airports[ori[i]].airport.getCode());
-            air.push_back(airports[dest[i]].airport.getCode());
+            air.push_back(airports[dest[j]].airport.getCode());
             comb[air] = dist;
         }
     }
     auto it = comb.begin();
-    auto min = comb.begin();
     vector<vector<string>> possible;
-    while (it != comb.end()){
-        if ((*it).second < min->second) {
-            min = it;
-            air = min->first;
-        }
+    while (it != comb.end()) {
+        air = it->first;
+        possible.push_back(air);
         it++;
-    }
-    auto it1 = comb.begin();
-    while (it1 != comb.end()){
-        if ((*it1).second == min->second){
-            air = (*it1).first;
-            possible.push_back(air);
-        }
-        it1++;
     }
     vector<vector<vector<string>>> ress;
     if (possible.size() > 1){
@@ -287,32 +275,19 @@ vector<vector<vector<string>>> Graph::fly_local(string lat_ori, string long_ori,
     for (int i = 0; i < ori.size(); i++){
         for (int j = 0; j < dest.size(); j++){
             air.clear();
-            int dist = bfs_distance(ori[i],ori[j]);
+            int dist = bfs_distance(ori[i],dest[j]);
             air.push_back(airports[ori[i]].airport.getCode());
             air.push_back(airports[dest[j]].airport.getCode());
             comb[air] = dist;
         }
     }
-
     auto it = comb.begin();
-    auto min = comb.begin();
     vector<vector<string>> possible;
-    while (it != comb.end()){
-        if ((*it).second < min->second) {
-            min = it;
-            air = min->first;
-        }
+    while (it != comb.end()) {
+        air = it->first;
+        possible.push_back(air);
         it++;
     }
-    auto it1 = comb.begin();
-    while (it1 != comb.end()){
-        if ((*it1).second == min->second){
-            air = (*it1).first;
-            possible.push_back(air);
-        }
-        it1++;
-    }
-
     vector<vector<vector<string>>> ress;
     if (possible.size() > 1){
         vector<vector<string>> temp;
@@ -324,9 +299,7 @@ vector<vector<vector<string>>> Graph::fly_local(string lat_ori, string long_ori,
     else{
         ress.push_back(fly_airport(possible[0][0], possible[0][1], companhias,one));
     }
-
     return ress;
-
 }
 
 
@@ -334,7 +307,6 @@ vector<vector<vector<string>>> Graph::fly_local(string lat_ori, string long_ori,
 
 unordered_set<string> Graph::getAirlines(list<Flight> flights){
     unordered_set<string> temp;
-
     for(auto elem : flights){
         for(auto f : elem.airlines){
             if(temp.find(f.getName()) == temp.end()){
