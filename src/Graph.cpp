@@ -157,10 +157,9 @@ void Graph::getAllPathsUtil(int u, int d,int path[], int& path_index, int min, v
     airports[u].visited = false;
 }
 
-vector<vector<string>> Graph::fly_airport(std::string origem, std::string destino, vector<std::string> &companhias, bool one) {
+vector<vector<string>> Graph::fly_airport(std::string origem, std::string destino, vector<std::string> &companhias, bool one, vector<vector<vector<string>>>& airlines) {
     int o = find_airport(origem);
     int d = find_airport(destino);
-    vector<vector<string>> res;
     int i;
     vector<vector<int>> result={};
     int distancia= bfs_distance(o,d);
@@ -173,13 +172,15 @@ vector<vector<string>> Graph::fly_airport(std::string origem, std::string destin
         result =getAllPaths(o,d,i,companhias, one);
         if(!result.empty()) break;
         i++;
+        if(i==10) return {};
     }
-    vector<pair<string, string>> result_;
+    //vector<pair<string, string>> result_;
+    vector<vector<string>> res;
     vector<vector<pair<string, string>>> route;
     if (o == 0 || d == 0)
-        res = {};
+        return {};
     else if (origem == destino)
-        res = {};
+        return {};
     else {
         for (auto vec: result) {
             vector<string> route;
@@ -189,6 +190,38 @@ vector<vector<string>> Graph::fly_airport(std::string origem, std::string destin
             }
             res.push_back(route);
         }
+    }
+    vector<string> airlines_voo;
+    vector<vector<string>> airlines_percurso;
+    for(auto vec: result){
+        for( int i=0;i<vec.size()-1;i++){
+            for(auto e: airports[vec[i]].voos){
+                if(e.destino==vec[i+1]){
+                    if(companhias.empty()){
+                        auto it=e.airlines.begin();
+                        while (it!=e.airlines.end()){
+                            airlines_voo.push_back((*it).getCode());
+                            it++;
+                        }
+                    }
+                    else{
+                        for(auto elem:companhias){
+                            Airline a=Airline(elem,"","","");
+                            if(e.airlines.find(a)!=e.airlines.end()){
+                                airlines_voo.push_back(a.getCode());
+                            }
+
+                        }
+                    }
+                    airlines_percurso.push_back(airlines_voo);
+                    airlines_voo={};
+                    break;
+                }
+            }
+
+        }
+        airlines.push_back(airlines_percurso);
+        airlines_percurso={};
     }
     return res;
 }
@@ -212,7 +245,7 @@ int Graph::bfs_distance(int a, int b){
     }
     return airports[b].dist;
 }
-vector<vector<vector<string>>> Graph::fly_city(std::string origem, std::string destino, vector<std::string> companhias, bool one) {
+vector<vector<vector<string>>> Graph::fly_city(std::string origem, std::string destino, vector<std::string> companhias, bool one, vector<vector<vector<string>>>& airlines) {
     vector<vector<vector<string>>> ress;
         vector<int> ori;
         vector<int> dest;
@@ -251,11 +284,11 @@ vector<vector<vector<string>>> Graph::fly_city(std::string origem, std::string d
         else if (possible.size() > 1) {
             vector<vector<string>> temp;
             for (int i = 0; i < possible.size(); i++) {
-                temp = fly_airport(possible[i][0], possible[i][1], companhias, one);
+                temp = fly_airport(possible[i][0], possible[i][1], companhias, one,airlines);
                 ress.push_back(temp);
             }
         } else if (possible.size() == 1) {
-            ress.push_back(fly_airport(possible[0][0], possible[0][1], companhias, one));
+            ress.push_back(fly_airport(possible[0][0], possible[0][1], companhias, one,airlines));
         }
         else {
             ress = {};
@@ -264,7 +297,7 @@ vector<vector<vector<string>>> Graph::fly_city(std::string origem, std::string d
 }
 
 
-vector<vector<vector<string>>> Graph::fly_local(string lat_ori, string long_ori, string lat_dest, string long_dest, int km, vector<std::string> companhias, bool one) {
+vector<vector<vector<string>>> Graph::fly_local(string lat_ori, string long_ori, string lat_dest, string long_dest, int km, vector<std::string> companhias, bool one, vector<vector<vector<string>>>& airlines) {
     vector<vector<vector<string>>> ress;
     vector<int> ori;
     vector<int> dest;
@@ -303,11 +336,11 @@ vector<vector<vector<string>>> Graph::fly_local(string lat_ori, string long_ori,
     if (possible.size() > 1) {
         vector<vector<string>> temp;
         for (int i = 0; i < possible.size(); i++) {
-            temp = fly_airport(possible[i][0], possible[i][1], companhias, one);
+            temp = fly_airport(possible[i][0], possible[i][1], companhias, one,airlines);
             ress.push_back(temp);
         }
     } else if (possible.size() == 1) {
-        ress.push_back(fly_airport(possible[0][0], possible[0][1], companhias, one));
+        ress.push_back(fly_airport(possible[0][0], possible[0][1], companhias, one,airlines));
     }
     return ress;
 }
