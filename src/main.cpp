@@ -155,7 +155,7 @@ int main() {
                             cout << route_big[k][j][i] << " | ";
                         }
                         cout << route_big[k][j].back();
-                        cout<<"\n Companhias: ";
+                        cout<<"\nCompanhias: ";
                         for(auto vec: airlines[k+j]){
                             for( int l=0;l<vec.size()-1;l++ ){
                                 string a=vec[l];

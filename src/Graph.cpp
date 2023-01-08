@@ -159,7 +159,7 @@ vector<vector<string>> Graph::fly_airport(std::string origem, std::string destin
         result =getAllPaths(o,d,i,companhias, one);
         if(!result.empty()) break;
         i++;
-        if(i==10) return {};
+        if(i==7) return {};
     }
     //vector<pair<string, string>> result_;
     vector<vector<string>> res;
@@ -233,7 +233,7 @@ int Graph::bfs_distance(int a, int b){
     return airports[b].dist;
 }
 vector<vector<vector<string>>> Graph::fly_city(std::string origem, std::string destino, vector<std::string> companhias, bool one, vector<vector<vector<string>>>& airlines) {
-    vector<vector<vector<string>>> ress;
+    /*vector<vector<vector<string>>> ress;
         vector<int> ori;
         vector<int> dest;
         int orig;
@@ -247,40 +247,108 @@ vector<vector<vector<string>>> Graph::fly_city(std::string origem, std::string d
                 desti = i;
                 dest.push_back(desti);
             }
-        }
-        map<vector<string>, int> comb;
-        vector<string> air;
-        for (int i = 0; i < ori.size(); i++) {
-            for (int j = 0; j < dest.size(); j++) {
-                air.clear();
-                int dist = bfs_distance(ori[i], dest[j]);
-                air.push_back(airports[ori[i]].airport.getCode());
-                air.push_back(airports[dest[j]].airport.getCode());
-                comb[air] = dist;
+        }*/
+    vector<vector<vector<string>>> ress;
+    vector<int> ori;
+    vector<int> dest;
+    unordered_set<string> c_o;
+    unordered_set<string> c_d;
+    vector<string> country_o;
+    vector<string> country_d;
+    vector<pair<int,string>> origens;
+    vector<pair<int,string>> destinos;
+    string country="";
+    for (int i = 1; i < airports.size(); i++) {
+        if (airports[i].airport.getCity() == origem) {
+            origens.push_back({i,airports[i].airport.getCountry()});
+            auto it=c_o.find(airports[i].airport.getCountry());
+            if(it==c_o.end()) {
+                c_o.insert(airports[i].airport.getCountry());
+                country_o.push_back(airports[i].airport.getCountry());
             }
         }
-        auto it = comb.begin();
-        vector<vector<string>> possible;
-        while (it != comb.end()) {
-            air = it->first;
-            possible.push_back(air);
-            it++;
-        }
-        if (origem == destino)
-            ress = {};
-        else if (possible.size() > 1) {
-            vector<vector<string>> temp;
-            for (int i = 0; i < possible.size(); i++) {
-                temp = fly_airport(possible[i][0], possible[i][1], companhias, one,airlines);
-                ress.push_back(temp);
+        if (airports[i].airport.getCity() == destino) {
+            destinos.push_back({i,airports[i].airport.getCountry()});
+            auto it=c_d.find(airports[i].airport.getCountry());
+            if(it==c_d.end()) {
+                c_d.insert(airports[i].airport.getCountry());
+                country_d.push_back(airports[i].airport.getCountry());
             }
-        } else if (possible.size() == 1) {
-            ress.push_back(fly_airport(possible[0][0], possible[0][1], companhias, one,airlines));
         }
-        else {
-            ress = {};
+
+    }
+    if(country_o.size()>1){
+        cout<<"Em qual destes paises esta localizada a origem?\n";
+        for(int i=0;i<country_o.size();i++){
+            cout<<i<<") "<< country_o[i]<<"\n";
         }
-        return ress;
+        string input;
+        cin>>input;
+        int a =stoi(input);
+        country=country_o[a];
+        for(auto elem: origens){
+            if(elem.second==country) ori.push_back(elem.first);
+        }
+    }
+    else{
+        for(auto elem: origens){
+            ori.push_back(elem.first);
+        }
+
+    }
+
+    if(country_d.size()>1){
+        cout<<"Em qual destes paises esta localizado o destino?\n";
+        for(int i=0;i<country_d.size();i++){
+            cout<<i<<") "<< country_d[i]<<"\n";
+        }
+        string input;
+        cin>>input;
+        int a =stoi(input);
+        country=country_d[a];
+        for(auto elem: destinos){
+            if(elem.second==country) dest.push_back(elem.first);
+        }
+    }
+    else{
+        for(auto elem: destinos){
+            dest.push_back(elem.first);
+        }
+
+    }
+    map<vector<string>, int> comb;
+    vector<string> air;
+    for (int i = 0; i < ori.size(); i++) {
+        for (int j = 0; j < dest.size(); j++) {
+            air.clear();
+            int dist = bfs_distance(ori[i], dest[j]);
+            air.push_back(airports[ori[i]].airport.getCode());
+            air.push_back(airports[dest[j]].airport.getCode());
+            comb[air] = dist;
+        }
+    }
+    auto it = comb.begin();
+    vector<vector<string>> possible;
+    while (it != comb.end()) {
+        air = it->first;
+        possible.push_back(air);
+        it++;
+    }
+    if (origem == destino)
+        ress = {};
+    else if (possible.size() > 1) {
+        vector<vector<string>> temp;
+        for (int i = 0; i < possible.size(); i++) {
+            temp = fly_airport(possible[i][0], possible[i][1], companhias, one,airlines);
+            ress.push_back(temp);
+        }
+    } else if (possible.size() == 1) {
+        ress.push_back(fly_airport(possible[0][0], possible[0][1], companhias, one,airlines));
+    }
+    else {
+        ress = {};
+    }
+    return ress;
 }
 
 
