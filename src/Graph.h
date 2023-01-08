@@ -41,17 +41,14 @@ public:
      /// Setter.
      /// \param a An airport
      void setAirport(Airport a);
-
      /// Reads flights.
      /// \param airlines The airlines
     void read_flights(unordered_set<Airline,AirlineHash> airlines);
-    bool find_city(string city);
     /// Add a flight from a certain source to a certain destination performed by a certain airline.
     /// \param src Source
     /// \param dest Destination
     /// \param airline Airline
     void addFlight(int src, int dest, Airline airline);
-    //find airport
     /// Find a specific airport.
     /// \param code Code of the wanted airport
     /// \return An integer with the position of that airport in the vector that is stored
@@ -80,15 +77,14 @@ public:
     /// \return Wether it wants all the fastest alternatives or just one
     vector<vector<int>> getAllPaths(int s, int d, int min, vector<string> &companhias, bool one);
 
-    /// Finds the fastest option to travel through cities
+    /// Finds the fastest option to travel through cities.
     /// \param origem Source
     /// \param destino Destination
     /// \param companhias Airlines permitted by the user
     /// \param one Wether it wants all the fastest alternatives or just one
     /// \return The fastest option
     vector<vector<vector<string>>> fly_city(std::string origem, std::string destino, vector<std::string> companhias, bool one, vector<vector<vector<string>>>& airlines);
-    //find less flights between location<
-    /// Finds the fastest option to travel between locations
+    /// Finds the fastest option to travel between locations.
     /// \param lat_ori Latitude of the source
     /// \param long_ori Longitude of the source
     /// \param lat_dest Latitute of the destination
@@ -98,7 +94,6 @@ public:
     /// \param one Wether it wants all the fastest alternatives or just one
     /// \return The fastest option
     vector<vector<vector<string>>>fly_local(string lat_ori, string long_ori, string lat_dest, string long_dest, int km, vector<std::string> companhias, bool one, vector<vector<vector<string>>>& airlines);
-    //find less flights between airport
     /// Finds the fastest option between airports given by the user.
     /// \param origem Source
     /// \param destino Destination
@@ -139,9 +134,8 @@ public:
     /// \param flights
     /// \return Unordered set containing airlines
     unordered_set<string> getAirlines(list<Flight> flights);
-
+    /// Determines which airports have more destinies.
     void topAirports();
-
 };
 
 

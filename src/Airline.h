@@ -30,13 +30,13 @@ public:
     /// Getter.
     /// \return Country of the Airline
     string getCountry();
-    /// Definition of operator "=="
+    /// Definition of operator "==".
     /// \param f An airline
     /// \return Wether if it the same airline or not
     bool operator==(const Airline& f) const {
          return (this->getCode() == f.code);
     }
-    /// Definition of operator "<"
+    /// Definition of operator "<".
     /// \param f An airline
     /// \return Wether if the code of the airline is "smaller" (alphabetically) or not
     bool operator<(const Airline& f) const {
