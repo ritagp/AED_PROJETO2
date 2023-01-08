@@ -86,7 +86,7 @@ public:
     /// \param companhias Airlines permitted by the user
     /// \param one Wether it wants all the fastest alternatives or just one
     /// \return The fastest option
-    vector<vector<vector<string>>> fly_city(std::string origem, std::string destino, vector<std::string> companhias, bool one,vector<vector<vector<string>>>& airlines);
+    vector<vector<vector<string>>> fly_city(std::string origem, std::string destino, vector<std::string> companhias, bool one, vector<vector<vector<string>>>& airlines);
     //find less flights between location<
     /// Finds the fastest option to travel between locations
     /// \param lat_ori Latitude of the source
@@ -97,7 +97,7 @@ public:
     /// \param companhias Airlines permitted by the user
     /// \param one Wether it wants all the fastest alternatives or just one
     /// \return The fastest option
-    vector<vector<vector<string>>>fly_local(string lat_ori, string long_ori, string lat_dest, string long_dest, int km, vector<std::string> companhias, bool one,vector<vector<vector<string>>>& airlines);
+    vector<vector<vector<string>>>fly_local(string lat_ori, string long_ori, string lat_dest, string long_dest, int km, vector<std::string> companhias, bool one, vector<vector<vector<string>>>& airlines);
     //find less flights between airport
     /// Finds the fastest option between airports given by the user.
     /// \param origem Source
@@ -139,6 +139,8 @@ public:
     /// \param flights
     /// \return Unordered set containing airlines
     unordered_set<string> getAirlines(list<Flight> flights);
+
+    void topAirports();
 
 };
 

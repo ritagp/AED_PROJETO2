@@ -76,19 +76,6 @@ int Graph::find_airport(std::string code) {
     return 0;
 }
 
-bool Graph::find_city(string city){
-    for( Node n:airports){
-        n.visited=false;
-    }
-    for (int v=1;v<airports.size();v++){
-        if(airports[v].airport.getCity() == city) return true;
-        return false;
-    }
-}
-
-int Graph::number_flights(int a) {
-    return airports[a].voos.size();
-}
 
 vector<vector<int>> Graph::getAllPaths(int s, int d, int min, vector<string> &companhias, bool one){
     this->n=airports.size();
@@ -342,6 +329,8 @@ vector<vector<vector<string>>> Graph::fly_local(string lat_ori, string long_ori,
     } else if (possible.size() == 1) {
         ress.push_back(fly_airport(possible[0][0], possible[0][1], companhias, one,airlines));
     }
+
+
     return ress;
 }
 
@@ -412,4 +401,30 @@ double Graph::getDistanceKms(double lat1, double long1, double lat2, double long
 
 double Graph::degToRad(double diff){
     return diff * (M_PI/180);
+}
+
+bool cmp(pair<int, int>& a, pair<int, int>& b){
+    return a.second > b.second;
+}
+
+void Graph::topAirports(){
+    vector<pair<int,int>> table(n, {0,0});
+
+    int i=1;
+    while(i<n){
+        for(auto elem: airports[i].voos){
+            if(table[i].first == 0){ table[i].first = i;}
+            table[elem.destino].second += elem.airlines.size();
+        }
+
+        i++;
+    }
+
+    sort(table.begin(),table.end(),cmp);
+
+    cout << "====================== TOP 10 AIRPORTS ======================\n";
+    for(int j = 0; j <10; j++){
+        cout << j+1 << ") " << airports[table[j].first].airport.getCode() << " - " << airports[table[j].first].airport.getName() << ", " << airports[table[j].first].airport.getCity() << " || Arrivals: " << table[j].second << '\n';
+    }
+
 }
